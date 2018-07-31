@@ -1,0 +1,233 @@
+﻿<#@ template debug="true" hostSpecific="true" language="C#" #>
+<#@ output extension=".cs" #>
+<#@ Assembly Name="System.Core" #>
+<#@ Assembly Name="netstandard, Version=2.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51" #>
+<#@ Assembly Name="%USERPROFILE%\.nuget\packages\microsoft.extensions.configuration\2.1.1\lib\netstandard2.0\Microsoft.Extensions.Configuration.dll" #>
+<#@ Assembly Name="%USERPROFILE%\.nuget\packages\microsoft.extensions.configuration.abstractions\2.1.1\lib\netstandard2.0\Microsoft.Extensions.Configuration.Abstractions.dll" #>
+<#@ Assembly Name="%USERPROFILE%\.nuget\packages\microsoft.extensions.configuration.json\2.1.1\lib\netstandard2.0\Microsoft.Extensions.Configuration.Json.dll" #>
+<#@ Assembly Name="%USERPROFILE%\.nuget\packages\microsoft.extensions.configuration.fileextensions\2.1.1\lib\netstandard2.0\Microsoft.Extensions.Configuration.FileExtensions.dll" #>
+<#@ Assembly Name="%USERPROFILE%\.nuget\packages\microsoft.extensions.fileproviders.physical\2.1.1\lib\netstandard2.0\Microsoft.Extensions.FileProviders.Physical.dll" #>
+<#@ Assembly Name="%USERPROFILE%\.nuget\packages\microsoft.extensions.fileproviders.abstractions\2.1.1\lib\netstandard2.0\Microsoft.Extensions.FileProviders.Abstractions.dll" #>
+<#@ Assembly Name="%USERPROFILE%\.nuget\packages\microsoft.extensions.primitives\2.1.1\lib\netstandard2.0\Microsoft.Extensions.Primitives.dll" #>
+<#@ Assembly Name="%USERPROFILE%\.nuget\packages\newtonsoft.json\11.0.2\lib\netstandard2.0\Newtonsoft.Json.dll" #>
+<#@ Assembly Name="$(ProjectDir)\lib\ClassLibrary1.dll" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="Microsoft.Extensions.Configuration" #>
+<#@ import namespace="ClassLibrary1" #>
+using Microsoft.Extensions.Configuration;
+using System.IO;
+<#
+		string getNamespace()
+		{
+			return System.Runtime.Remoting.Messaging.CallContext.LogicalGetData("NamespaceHint").ToString(); 
+		}
+		List<IConfigurationSection> getInner(IConfigurationSection section)
+		{
+			return section.GetChildren().ToList();
+		}
+		string detectType(string value)
+		{
+			if (value.ToLower() == "true" || value.ToLower() == "false") return "bool";
+			bool digit = true;
+			foreach (char c in value)
+			{
+				if (!char.IsDigit(c) && c != '.' && c != ',' && c != '-')
+				{
+					digit = false;
+					break;
+				}
+			}
+			if (digit)
+			{
+				int step = 0;
+				while (step <= 11)
+				{
+					try
+					{
+						switch (step)
+						{
+							case 0:
+								byte.Parse(value);
+								return "byte";
+							case 1:
+								sbyte.Parse(value);
+								return "sbyte";
+							case 2:
+								short.Parse(value);
+								return "short";
+							case 3:
+								ushort.Parse(value);
+								return "ushort";
+							case 4:
+								int.Parse(value);
+								return "int";
+							case 5:
+								uint.Parse(value);
+								return "uint";
+							case 6:
+								long.Parse(value);
+								return "long";
+							case 7:
+								ulong.Parse(value);
+								return "ulong";
+							case 8:
+								float.Parse(value.Replace(".", ","));
+								return "float";
+							case 9:
+								double.Parse(value.Replace(".", ","));
+								return "double";
+							case 10:
+								decimal.Parse(value.Replace(".", ","));
+								return "decimal";
+							default:
+								return "string";
+						}
+					}
+					catch 
+					{
+						step++;
+					}
+				}
+				return null;
+			}
+			else return "string";
+		}
+
+
+		var builder = new ConfigurationBuilder()
+										.SetBasePath(Directory.GetCurrentDirectory())
+										.AddJsonFile(Path.Combine(this.Host.ResolvePath("appsettings.json")));
+		var Configuration = builder.Build();
+
+		List<ClassModel> classes = new List<ClassModel>();
+
+		List<Prop> mainProps = new List<Prop>();
+
+		List<IConfigurationSection> v = Configuration.GetChildren().ToList();
+		IConfigurationSection firstItem = v.First();
+
+		List<IConfigurationSection> inner;
+		Queue<List<IConfigurationSection>> nextInners = new Queue<List<IConfigurationSection>>();
+		nextInners.Enqueue(firstItem.GetChildren().ToList());
+		bool firstRun = true;
+		while (nextInners.Count > 0)
+			{
+				inner = nextInners.Dequeue();
+				foreach (var item in inner)
+				{
+					if (firstRun)
+					{
+						Prop p = new Prop();
+						p.Name = item.Key;
+						p.Type = item.Key;
+						mainProps.Add(p);
+					}
+					if (item.Value == null)
+					{
+						var childInners = getInner(item);
+						if (childInners.Count > 0) nextInners.Enqueue(childInners);
+
+						ClassModel m = new ClassModel();
+						m.ClassName = item.Key;
+						classes.Add(m);
+						if (!firstRun)
+						{
+							string[] s = item.Path.Split(':');
+							string className = s[s.Length - 2];
+							ClassModel mo = classes.First(x => x.ClassName == className);
+							Prop p = new Prop();
+							p.Name = item.Key;
+							p.Type = item.Key;
+							mo.Properties.Add(p);
+						}
+					}
+					else
+					{
+						Prop p = new Prop();
+						p.Name = item.Key;
+						p.Path = item.Path;
+						p.Value = item.Value;
+						p.Type = detectType(item.Value.ToString());
+						string[] s = item.Path.Split(':');
+						string className = s[s.Length - 2];
+						ClassModel m = classes.First(x => x.ClassName == className);
+						m.Properties.Add(p);
+					}
+				}
+				firstRun = false;
+			}#>
+
+namespace <#= getNamespace() #>
+{
+<# 
+		foreach(var item in classes)
+		{
+	#>
+	public class <#= item.ClassName #>
+	{
+		private static IConfiguration _configuration;
+
+		public <#= item.ClassName #>(IConfiguration configuration)
+		{
+			_configuration = configuration;
+
+<#		foreach(var property in item.Properties)
+			{
+#>			<#= property.Name #> = <# 
+				if (property.Value == null) 
+				{
+				#>new <#= property.Type#>(_configuration);
+<#			} 
+				else if (property.Type == "string")
+				{
+			#>_configuration.GetSection("<#= property.Path #>").Value;
+<#			}
+				else
+				{
+	         #><#= property.Type #>.Parse(_configuration.GetSection("<#= property.Path #>").Value<# if (property.Type == "float" || property.Type == "double" || property.Type == "decimal") { #>.Replace(".", ",")<# }  #>);
+<#
+				}
+			}	#>
+		}
+
+<#
+		foreach(var property in item.Properties)
+		{
+#>		public <#= property.Type #> <#= property.Name #> { get; }
+<#	}
+#>	}
+<#
+	}
+  #>
+
+	public class AppConfig
+	{
+		private static IConfiguration _configuration;
+
+		public AppConfig(string jsonPath)
+		{
+			var builder = new ConfigurationBuilder()
+										.SetBasePath(Directory.GetCurrentDirectory())
+										.AddJsonFile(jsonPath);
+			_configuration = builder.Build();
+
+<#			foreach(var mainProp in mainProps)
+				{
+#>			<#= mainProp.Name #> = new <#= mainProp.Type #>(_configuration);
+<#
+
+				}#>
+		}
+
+<#
+		foreach(var mainProp in mainProps)
+		{
+#>		public <#= mainProp.Type #> <#= mainProp.Name #> { get; }
+<#
+		}
+	#>
+	}
+}

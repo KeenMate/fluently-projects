@@ -1,0 +1,54 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <RootNamespace>MyNewNamespace</RootNamespace>
+    <TransformOnBuild>true</TransformOnBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.1.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="ClassLibrary1">
+      <HintPath>..\..\ConsoleApp5\ClassLibrary1\bin\Debug\ClassLibrary1.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Template1.tt">
+      <CustomToolNamespace></CustomToolNamespace>
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Template1.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+  <ItemGroup>
+    <T4ParameterValues Include="SomePath">
+        <Value>$(ProjectDir)</Value>
+    </T4ParameterValues>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Template1.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Template1.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <Target Name="CreateT4ItemListsForMSBuildCustomTool" BeforeTargets="CreateT4ItemLists" AfterTargets="SelectItemsForTransform">
+
+      <ItemGroup>
+          <T4Transform Include="@(CreateT4ItemListsInputs)" Condition="'%(CreateT4ItemListsInputs.Generator)' == 'MSBuild:TransformAll'" />
+      </ItemGroup>
+  </Target>
+</Project>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<VSTemplate Version="3.0.0" Type="ProjectGroup" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" xmlns:sdk="http://schemas.microsoft.com/developer/vstemplate-sdkextension/2010">
+	<TemplateData>
+		<Name>WindowsServiceXPlate</Name>
+		<Description>Boiler plate for Windows service project, Contains Console project and Common project</Description>
+		<Icon>Icon.ico</Icon>
+		<ProjectType>CSharp</ProjectType>
+		<CreateNewFolder>false</CreateNewFolder>
+  </TemplateData>
+	<TemplateContent>
+		<ProjectCollection>
+			<ProjectTemplateLink CopyParameters="true" ProjectName="$safeprojectname$.TestConsole">
+				WindowsServiceXPlate.TestConsole\WindowsServiceXPlate.TestConsole.vstemplate
+			</ProjectTemplateLink>
+			<ProjectTemplateLink CopyParameters="true" ProjectName="$safeprojectname$">
+				WindowsServiceXPlate\WindowsServiceXPlate.vstemplate
+			</ProjectTemplateLink>
+			<ProjectTemplateLink CopyParameters="true" ProjectName="$safeprojectname$.Service">
+				WindowsServiceXPlate.Service\WindowsServiceXPlate.Service.vstemplate
+			</ProjectTemplateLink>
+		</ProjectCollection>
+	</TemplateContent>
+</VSTemplate>

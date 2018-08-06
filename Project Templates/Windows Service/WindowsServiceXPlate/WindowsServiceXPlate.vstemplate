@@ -1,0 +1,33 @@
+<VSTemplate Version="3.0.0" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" Type="Project">
+  <TemplateData>
+    <Name>$ext_safeprojectname$</Name>
+    <Description>Base project for WindowsService project</Description>
+    <ProjectType>CSharp</ProjectType>
+    <DefaultName>$ext_safeprojectname$</DefaultName>
+    <Icon>__TemplateIcon.ico</Icon>
+  </TemplateData>
+  <TemplateContent>
+    <Project TargetFileName="$ext_safeprojectname$.csproj" File="WindowsServiceXPlate.csproj" ReplaceParameters="true">
+      <ProjectItem ReplaceParameters="true" TargetFileName="Bootstrapper.cs" OpenInEditor="true">Bootstrapper.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="NLog.config">NLog.config</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="NLog.xsd">NLog.xsd</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="packages.config">packages.config</ProjectItem>
+      <Folder Name="Properties" TargetFolderName="Properties">
+        <ProjectItem ReplaceParameters="true" TargetFileName="AssemblyInfo.cs">AssemblyInfo.cs</ProjectItem>
+      </Folder>
+      <Folder Name="Data" TargetFolderName="Data">
+        <Folder Name="Base" TargetFolderName="Base">
+        </Folder>
+        <Folder Name="Enums" TargetFolderName="Enums">
+          <ProjectItem ReplaceParameters="true" TargetFileName="ServiceState.cs">ServiceState.cs</ProjectItem>
+        </Folder>
+        <ProjectItem ReplaceParameters="true" TargetFileName="Configuration.cs">
+          Configuration.cs
+        </ProjectItem>
+      </Folder>
+      <Folder Name="Providers" TargetFolderName="Providers">
+        <ProjectItem ReplaceParameters="true" TargetFileName="DummyDataProvider.cs" OpenInEditor="false">DummyDataProvider.cs</ProjectItem>
+      </Folder>
+    </Project>
+  </TemplateContent>
+</VSTemplate>

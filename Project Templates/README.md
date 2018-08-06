@@ -4,4 +4,4 @@ In this folder you can find several C# project templates for Visual Studio 2017 
 
 ##List of Templates
 
-- [Windows service](https://github.com/KeenMate/fluently-projects/Project%20templates/)
+- [Windows service](https://github.com/KeenMate/fluently-projects/Project%20templates/Windows%20Service)

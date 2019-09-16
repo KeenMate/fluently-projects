@@ -1,0 +1,51 @@
+<VSTemplate Version="3.0.0" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" Type="Project">
+  <TemplateData>
+    <Name>$ext_safeprojectname$.TestConsole</Name>
+    <Description>Test Console for the Windows Service base project</Description>
+    <ProjectType>CSharp</ProjectType>
+    <DefaultName>$ext_safeprojectname$.TestConsole</DefaultName>
+    <ProvideDefaultName>true</ProvideDefaultName>
+    <Icon>__TemplateIcon.ico</Icon>
+  </TemplateData>
+  <TemplateContent>
+    <Project TargetFileName="$ext_safeprojectname$.TestConsole.csproj" File="WindowsServiceXplate.TestConsole.csproj" ReplaceParameters="true">
+      <ProjectItem ReplaceParameters="true" TargetFileName="App.config">App.config</ProjectItem>
+      <Folder Name="Data" TargetFolderName="Data">
+        <Folder Name="Base" TargetFolderName="Base">
+          <ProjectItem ReplaceParameters="true" TargetFileName="Canvas.cs">Canvas.cs</ProjectItem>
+          <ProjectItem ReplaceParameters="true" TargetFileName="Position.cs">Position.cs</ProjectItem>
+        </Folder>
+        <Folder Name="Constants" TargetFolderName="Constants">
+          <ProjectItem ReplaceParameters="true" TargetFileName="CharacterMap.cs">CharacterMap.cs</ProjectItem>
+        </Folder>
+        <Folder Name="Enums" TargetFolderName="Enums">
+          <ProjectItem ReplaceParameters="true" TargetFileName="Flags.cs">Flags.cs</ProjectItem>
+          <ProjectItem ReplaceParameters="true" TargetFileName="MenuActions.cs">MenuActions.cs</ProjectItem>
+          <ProjectItem ReplaceParameters="true" TargetFileName="RenderPositions.cs">RenderPositions.cs</ProjectItem>
+        </Folder>
+        <Folder Name="Exceptions" TargetFolderName="Exceptions">
+          <ProjectItem ReplaceParameters="true" TargetFileName="InvalidTypeException.cs">InvalidTypeException.cs</ProjectItem>
+        </Folder>
+        <ProjectItem ReplaceParameters="true" TargetFileName="Menu.cs">Menu.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="TextCanvas.cs">TextCanvas.cs</ProjectItem>
+      </Folder>
+      <Folder Name="Helpers" TargetFolderName="Helpers">
+        <ProjectItem ReplaceParameters="true" TargetFileName="CanvasExtensions.cs">CanvasExtensions.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="PaintBrush.cs">PaintBrush.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="PositionExtensions.cs">PositionExtensions.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="StringExtensions.cs">StringExtensions.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="TextCanvasExtensions.cs">TextCanvasExtensions.cs</ProjectItem>
+      </Folder>
+      <ProjectItem ReplaceParameters="true" TargetFileName="NLog.config">NLog.config</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="NLog.xsd">NLog.xsd</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="packages.config">packages.config</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Program.cs" OpenInEditor="true">Program.cs</ProjectItem>
+      <Folder Name="Properties" TargetFolderName="Properties">
+        <ProjectItem ReplaceParameters="true" TargetFileName="AssemblyInfo.cs">AssemblyInfo.cs</ProjectItem>
+      </Folder>
+      <Folder Name="Providers" TargetFolderName="Providers">
+        <ProjectItem ReplaceParameters="true" TargetFileName="DialogProvider.cs">DialogProvider.cs</ProjectItem>
+      </Folder>
+    </Project>
+  </TemplateContent>
+</VSTemplate>

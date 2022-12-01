@@ -23,7 +23,9 @@ namespace ConsoleAppTemplate
 
 			try
 			{
-				CreateHostBuilder(args).RunConsoleAsync();
+				var hostBuilder = CreateHostBuilder(args);
+				hostBuilder.RunConsoleAsync();
+
 			}
 			catch (Exception ex)
 			{
@@ -44,8 +46,8 @@ namespace ConsoleAppTemplate
 							.AddSingleton(configuration)
 							.AddTransient<CalculationProvider>()
 							.AddOptions()
-							.Configure<AppSettings>(configuration.GetSection("App"));
-						// .AddHostedService<Bootstrapper>();
+							.Configure<AppSettings>(configuration.GetSection("App"))
+						 .AddHostedService<Bootstrapper>();
 					}
 				)
 				.UseSerilog();

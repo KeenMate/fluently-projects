@@ -5,4 +5,12 @@ In this folder you can find several C# project templates for Visual Studio 2017 
 ## List of Templates
 
 - [Windows service](https://github.com/KeenMate/fluently-projects/Project%20templates/Windows%20Service)
-- Console Application integrated with Nlog and other handy tools (Todo)
+- [.NET Core 3.1 Console application](
+https://github.com/KeenMate/fluently-projects/tree/master/Project%20Templates/DotNetCore%20Console%20App/dotnet_core_3_1)
+	- Serilog logging
+		+ Asynchronous Console logging, file log
+	- Dependency injection
+- [.NET 6 Console application](https://github.com/KeenMate/fluently-projects/tree/master/Project%20Templates/DotNetCore%20Console%20App/dotnet_6)
+	- Serilog logging
+		+ Asynchronous Console logging, file log
+	- Dependency injection

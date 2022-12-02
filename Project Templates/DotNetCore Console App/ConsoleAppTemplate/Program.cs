@@ -5,6 +5,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
+using Serilog.Events;
+using Serilog.Sinks.SystemConsole.Themes;
 
 namespace ConsoleAppTemplate
 {
@@ -25,7 +27,6 @@ namespace ConsoleAppTemplate
 			{
 				var hostBuilder = CreateHostBuilder(args);
 				hostBuilder.RunConsoleAsync();
-
 			}
 			catch (Exception ex)
 			{
@@ -57,7 +58,7 @@ namespace ConsoleAppTemplate
 		{
 			configuration = new ConfigurationBuilder()
 				.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-				//.AddEnvironmentVariables()
+				.AddEnvironmentVariables()
 				.AddCommandLine(args)
 				.Build();
 		}
@@ -66,6 +67,15 @@ namespace ConsoleAppTemplate
 		{
 			Log.Logger = new LoggerConfiguration()
 				.ReadFrom.Configuration(configuration)
+
+				// Enabled for fast asynchronous logging to console, with standard appsettings.json configuration 250k messages took 30s to display, with this 23s
+				// blockWhenFull ensures that all messages are printed out properly, without it only bufferSize (default 10000)
+				// of messages is printed all out and the rest is a random pick
+				.WriteTo.Async(wt => wt.Console(
+					theme: AnsiConsoleTheme.Literate,
+					restrictedToMinimumLevel: LogEventLevel.Verbose,
+					outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}]\t {Message:lj} <s:{SourceContext}>{NewLine}{Exception}"), blockWhenFull: true)
+
 				.CreateLogger();
 		}
 	}

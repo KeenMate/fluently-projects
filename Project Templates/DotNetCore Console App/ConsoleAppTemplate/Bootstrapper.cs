@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
@@ -17,9 +18,21 @@ namespace ConsoleAppTemplate
 		
 		public Task StartAsync(CancellationToken cancellationToken)
 		{
-			Console.WriteLine("Happening for real");
-			logger.LogInformation("Happening for real");
+			logger.LogCritical("Critical thing happening");
+			logger.LogError("Error thing happening");
+			logger.LogWarning("Warning thing happening");
+			logger.LogInformation("Informational thing happening");
+			logger.LogDebug("Debug thing happening");
+			logger.LogTrace("Trace thing happening");
 
+			var sw = Stopwatch.StartNew();
+
+			for (int i = 0; i < 250000; i++)
+			{
+				logger.LogInformation("Iteration: {iteration}", i);
+			}
+
+			logger.LogWarning("Time taken: {elapsed}", sw.Elapsed);
 			return Task.CompletedTask;
 
 		}

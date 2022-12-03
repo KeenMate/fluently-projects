@@ -16,7 +16,7 @@ namespace ConsoleAppTemplate
 		private static string[] args;
 		private static ServiceProvider serviceProvider;
 
-		static void Main(string[] args)
+		static async void Main(string[] args)
 		{
 			Program.args = args;
 
@@ -26,7 +26,7 @@ namespace ConsoleAppTemplate
 			try
 			{
 				var hostBuilder = CreateHostBuilder(args);
-				hostBuilder.RunConsoleAsync();
+				await hostBuilder.RunConsoleAsync();
 			}
 			catch (Exception ex)
 			{

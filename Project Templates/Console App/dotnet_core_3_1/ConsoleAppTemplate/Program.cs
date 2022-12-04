@@ -16,7 +16,7 @@ namespace ConsoleAppTemplate
 		private static string[] args;
 		private static ServiceProvider serviceProvider;
 
-		static async void Main(string[] args)
+		static async Task Main(string[] args)
 		{
 			Program.args = args;
 

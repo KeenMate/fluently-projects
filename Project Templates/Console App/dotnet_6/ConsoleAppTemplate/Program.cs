@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using ConsoleAppTemplate.Options;
 using ConsoleAppTemplate.Providers;
 using Microsoft.Extensions.Configuration;
@@ -16,7 +17,7 @@ namespace ConsoleAppTemplate
 		private static string[] args;
 		private static ServiceProvider serviceProvider;
 
-		static async void Main(string[] args)
+		static async Task Main(string[] args)
 		{
 			Program.args = args;
 

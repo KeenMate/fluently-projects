@@ -1,8 +1,10 @@
 using System.Collections;
 using System.Diagnostics;
+using CorrelationId;
 using Template0.Helpers;
 using Template0.Middlewares;
 using Serilog;
+using Template0.Extensions;
 
 namespace Template0;
 
@@ -21,7 +23,7 @@ internal class Program
 			.AddEnvironmentVariables()
 			.Build();
 
-		builder.Configuration.AddConfiguration(configuration);
+		builder.AddCorrelationId();
 
 		// Add services to the container.
 		builder.Services.AddCors(options =>
@@ -53,6 +55,8 @@ internal class Program
 			.CreateBootstrapLogger();
 
 		var app = builder.Build();
+
+		app.UseCorrelationId();
 
 		// MIDDLEWARES
 		app.UseMiddleware<OnlyOriginMiddleware>();

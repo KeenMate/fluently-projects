@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using ConsoleAppTemplate.Interfaces;
 using ConsoleAppTemplate.Options;
 using ConsoleAppTemplate.Providers;
 using Microsoft.Extensions.Configuration;
@@ -47,6 +48,8 @@ namespace ConsoleAppTemplate
 						services
 							.AddSingleton(configuration)
 							.AddTransient<CalculationProvider>()
+							.AddTransient<IDatabaseProvider, DummyDatabaseProvider>()
+							.AddTransient<IDataProvider, BinaryDataProvider>()
 							.AddOptions()
 							.Configure<AppSettings>(configuration.GetSection("App"))
 						 .AddHostedService<Bootstrapper>();

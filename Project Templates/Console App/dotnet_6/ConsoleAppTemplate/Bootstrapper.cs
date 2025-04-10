@@ -2,6 +2,8 @@
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
+using ConsoleAppTemplate.Interfaces;
+using ConsoleAppTemplate.Providers;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
@@ -10,10 +12,12 @@ namespace ConsoleAppTemplate
 	public class Bootstrapper : IHostedService
 	{
 		private readonly ILogger<Bootstrapper> logger;
+		private readonly IDatabaseProvider databaseProvider;
 
-		public Bootstrapper(ILogger<Bootstrapper> logger)
+		public Bootstrapper(ILogger<Bootstrapper> logger, IDatabaseProvider databaseProvider)
 		{
 			this.logger = logger;
+			this.databaseProvider = databaseProvider;
 		}
 		
 		public Task StartAsync(CancellationToken cancellationToken)
@@ -25,9 +29,11 @@ namespace ConsoleAppTemplate
 			logger.LogDebug("Debug thing happening");
 			logger.LogTrace("Trace thing happening");
 
+			var data = databaseProvider.GetData();
+
 			var sw = Stopwatch.StartNew();
 
-			for (int i = 0; i < 25000; i++)
+			for (int i = 0; i < 250000; i++)
 			{
 				logger.LogInformation("Iteration: {iteration}", i);
 			}
